@@ -18,7 +18,7 @@ class Location {
 }
 
 class CustomInfoWindowMarker extends StatefulWidget {
-  const CustomInfoWindowMarker({Key? key}) : super(key: key);
+  const CustomInfoWindowMarker({super.key});
 
   @override
   State<CustomInfoWindowMarker> createState() =>
@@ -32,10 +32,10 @@ class _CustomInfoWindowMarkerState extends State<CustomInfoWindowMarker> {
   final List<Location> locations = [
     Location(
       latLng: const LatLng(41.2963660743825, 69.35085438816506),
-      title: 'Chotkiy opa',
-      text: 'soati 300 kal',
+      title: 'PS_1',
+      text: 'good',
       photoUrl:
-      'https://i.pinimg.com/736x/23/60/c0/2360c073539b13761358392ddd89b71d.jpg',
+      'https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.playstation.com%2Fen-us%2F&psig=AOvVaw08LIt-9lkai8-R7aDrVrQP&ust=1715004680455000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCPjk17nY9oUDFQAAAAAdAAAAABAE',
     ),
     Location(
       latLng: const LatLng(41.29604273472128, 69.3503474207432),
@@ -55,19 +55,35 @@ class _CustomInfoWindowMarkerState extends State<CustomInfoWindowMarker> {
   }
 
   void _getLocationAndLoadData() async {
-    // Fetch the current position
-    Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
+    try {
+      // Fetch the current position
+      Position position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high);
 
-    // Set the initial camera position to the current location
-    LatLng currentLocation = LatLng(position.latitude, position.longitude);
-    initialPosition = CameraPosition(
-      target: currentLocation,
-      zoom: 14,
-    );
+      // Set the initial camera position to the current location
+      LatLng currentLocation = LatLng(position.latitude, position.longitude);
+      initialPosition = CameraPosition(
+        target: currentLocation,
+        zoom: 14,
+      );
 
-    // Load data and update markers
-    _loadData(initialPosition);
+      // Add marker for current position
+      myMarker.add(
+        Marker(
+          markerId: const MarkerId('currentPosition'),
+          position: currentLocation,
+          icon: BitmapDescriptor.defaultMarkerWithHue(
+            BitmapDescriptor.hueBlue, // You can use a different hue or custom icon here
+          ),
+        ),
+      );
+
+      // Load data and update markers
+      _loadData(initialPosition);
+    } catch (e) {
+      print('Error fetching current location: $e');
+      // Handle error, display message to the user, retry fetching, etc.
+    }
   }
 
   void _loadData(CameraPosition initialPosition) {
@@ -93,7 +109,7 @@ class _CustomInfoWindowMarkerState extends State<CustomInfoWindowMarker> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Container(
+                    SizedBox(
                       width: 250,
                       height: 120,
                       child: Image.network(
@@ -160,11 +176,7 @@ class _CustomInfoWindowMarkerState extends State<CustomInfoWindowMarker> {
 
   @override
   Widget build(BuildContext context) {
-    // Check if initialPosition is null, return a loading indicator or empty container
-    if (initialPosition == null) {
-      return CircularProgressIndicator(); // Or any other loading widget
-    }
-
+    // Check if initialPosition is null, display a loading indicator
     return Scaffold(
       body: Stack(
         children: [

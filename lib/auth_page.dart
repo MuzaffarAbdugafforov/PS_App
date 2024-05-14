@@ -1,8 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:untitled/login_page.dart';
-
-import 'custom_info_window.dart';
 import 'home_page.dart';
 import 'login_or_register_page.dart';
 
@@ -17,11 +14,11 @@ class AuthPage extends StatelessWidget {
         builder: (context, snapshot) {
           // user is logged in
           if(snapshot.hasData) {
-            return CustomInfoWindowMarker();
+            return const HomePage();
           }
           // user is not logged in
           else {
-            return LoginOrRegisterPage();
+            return const LoginOrRegisterPage();
           }
         },
       ),

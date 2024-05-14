@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:untitled/login_page.dart';
+import 'package:PS_project/login_page.dart';
 
 import 'register_page.dart';
 
